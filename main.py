@@ -1,16 +1,14 @@
 import pandas as pd
 
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.width', 1000)
-# df = pd.DataFrame({'name': {0: ' Braund', 1: ' Heikkinen', 2: ' Allen', 3: ' Moran', 4: ' McCarthy'}, 'Fullname': {0: ' Mr. Owen Harris ', 1: ' Miss. Laina ', 2: ' Mr. William Henry ', 3: ' Mr. James ', 4: ' Mr. Timothy J '}})
-data = pd.read_csv('tehetsegpont.csv')
-data.dropna(inplace=True)
+# pd.set_option('display.max_columns', 500)
+# pd.set_option('display.width', 1000)
 
-new = data["name"].str.split(" ", n = -1, expand = True)
-# making seperate title column from new data frame
-data["Title"]= new[0]
-# making seperate first name column from new data frame
-data["First Name"]= new[1]
-# making seperate last name column from new data frame
-data["Last Name"]= new[2]
-print(data)
+df = pd.read_csv('tehetsegpont.csv')
+df["addSpace"] = df["name"] = " " + df["name"]
+df["replaceDr"] = df["addSpace"].str.replace(' Dr.', 'Dr.')
+df["removeSpaceDr"] = df["replaceDr"].str.replace(' dr.', 'dr.')
+df[['title', 'firstName', 'lastName']] = df["removeSpaceDr"].str.split(' ', n=2, expand=True)
+
+
+df.to_csv("kesz.csv", index=False)
+print(df.head(10))
